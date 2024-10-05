@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Levantamento de Candidatos</title>
+</head>
+<body>
+
+  <h1>Resultados do Levantamento</h1>
+
+  <div id="resultado"></div>
+
+  <script>
+    const verificarEntrada = (entrada, opcoesM, opcoesF) => {
+      entrada = entrada.toLowerCase()
+      if (!isNaN(entrada) && isFinite(entrada)) return parseFloat(entrada)
+      if (opcoesM.includes(entrada)) return 'M'
+      if (opcoesF.includes(entrada)) return 'F'
+      return entrada === 'sim' || entrada === 's' ? 'S' : 'N'
+    }
+
+    let [feminino, masculino, experienciaHomens, somaIdadeHomens, homens45, mulheres21, menorIdadeMulher] = [0, 0, 0, 0, 0, 0, Infinity]
+
+    while (true) {
+      let idade = verificarEntrada(prompt("Digite a idade do candidato (ou 0 para encerrar):"), [], [])
+      if (idade === 0) break
+      if (isNaN(idade)) { alert("Digite um número válido!"); continue }
+
+      let sexo = verificarEntrada(prompt("Digite o sexo biológico (Homem, Mulher, Macho, Fêmea):"), ['homem', 'macho'], ['mulher', 'fêmea', 'femea'])
+      if (sexo !== 'M' && sexo !== 'F') { alert("Sexo inválido!"); continue }
+
+      let experiencia = verificarEntrada(prompt("O candidato tem experiência? (Sim ou Não):"), [], [])
+      if (experiencia !== 'S' && experiencia !== 'N') { alert("Resposta inválida!"); continue }
+
+      if (sexo === 'M') {
+        masculino++
+        if (experiencia === 'S') { experienciaHomens++; somaIdadeHomens += idade }
+        if (idade > 45) homens45++
+      } else {
+        feminino++
+        if (experiencia === 'S' && idade < 21) mulheres21++
+        if (experiencia === 'S' && idade < menorIdadeMulher) menorIdadeMulher = idade
+      }
+    }
+
+    let mediaIdadeHomens = experienciaHomens ? (somaIdadeHomens / experienciaHomens).toFixed(2) : 0
+    let porcentagemHomens45 = masculino ? ((homens45 / masculino) * 100).toFixed(2) : 0
+
+    document.getElementById('resultado').innerHTML = `
+      <p>Número de candidatas do sexo feminino: ${feminino}</p>
+      <p>Número de candidatos do sexo masculino: ${masculino}</p>
+      <p>Idade média dos homens com experiência: ${mediaIdadeHomens}</p>
+      <p>Porcentagem de homens com mais de 45 anos: ${porcentagemHomens45}%</p>
+      <p>Mulheres com menos de 21 anos e com experiência: ${mulheres21}</p>
+      <p>Menor idade entre as mulheres com experiência: ${menorIdadeMulher !== Infinity ? menorIdadeMulher : 'Nenhuma registrada.'}</p>
+    `
+  </script>
+</body>
+</html>

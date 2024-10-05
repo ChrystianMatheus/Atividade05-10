@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo de Números</title>
+</head>
+<body>
+
+<h1>Calculadora de Números</h1>
+
+<div id="resultado"></div>
+
+<script>
+    let numeros = []
+    let entrada;
+
+    while (true) {
+        entrada = parseFloat(prompt("Digite um número (ou 30000 para encerrar):"))
+        if (entrada === 30000) break
+        if (!isNaN(entrada)) {
+            numeros.push(entrada)
+        } else {
+            alert("Digite um número válido!")
+        }
+    }
+
+    if (numeros.length > 0) {
+        const soma = numeros.reduce((acc, num) => acc + num, 0)
+        const quantidade = numeros.length
+        const media = soma / quantidade
+        const maior = Math.max(...numeros)
+        const menor = Math.min(...numeros)
+
+        const pares = numeros.filter(num => num % 2 === 0)
+        const mediaPares = pares.length > 0 ? (pares.reduce((acc, num) => acc + num, 0) / pares.length).toFixed(2) : 0
+
+        const quantidadeImpares = quantidade - pares.length
+        const porcentagemImpares = ((quantidadeImpares / quantidade) * 100).toFixed(2)
+
+        document.getElementById('resultado').innerHTML = `
+            <p>Soma dos números digitados: ${soma}</p>
+            <p>Quantidade de números digitados: ${quantidade}</p>
+            <p>Média dos números digitados: ${media.toFixed(2)}</p>
+            <p>Maior número digitado: ${maior}</p>
+            <p>Menor número digitado: ${menor}</p>
+            <p>Média dos números pares: ${mediaPares}</p>
+            <p>Porcentagem de números ímpares: ${porcentagemImpares}%</p>
+        `
+    } else {
+        document.getElementById('resultado').innerHTML = "<p>Nenhum número foi digitado.</p>"
+    }
+</script>
+
+</body>
+</html>
